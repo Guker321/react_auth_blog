@@ -13,7 +13,6 @@ const URL_LOGIN = `https://identitytoolkit.googleapis.com/v1/accounts:signInWith
 
 const AuthForm = () => {
   const authContext = useContext(AuthContext);
-  console.log(authContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState(null);
@@ -54,8 +53,6 @@ const AuthForm = () => {
     event.preventDefault();
     setIsLoading(true);
 
-    // if (isLogin) {
-    // } else {
     fetch(`${!isLogin ? URL_REGISTRATION : URL_LOGIN}`, {
       method: 'POST',
       body: JSON.stringify({
@@ -79,13 +76,12 @@ const AuthForm = () => {
           });
         }
       })
-      .then((data) => console.log(data))
+      .then((data) => authContext.login(data.idToken))
       .catch((error) => {
         console.log(error.message);
         setError(error.message);
       });
 
-    setIsLoading(false);
     resetEnteredEmail();
     resetEnteredPassword();
   };

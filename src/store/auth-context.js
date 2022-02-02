@@ -14,9 +14,11 @@ const AuthContextProvider = (props) => {
 
   const loginHandler = (token) => {
     setToken(token);
+    localStorage.setItem('tokenId', token);
   };
   const logoutHandler = () => {
     setToken(null);
+    localStorage.removeItem('tokenId');
   };
 
   const authContextValue = {
