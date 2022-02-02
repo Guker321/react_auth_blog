@@ -7,8 +7,9 @@ import classes from './AuthForm.module.css';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import { AuthContext } from '../../store/auth-context';
 
-const URL_REGISTRATION = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBTRy88tody2H_xHOc93ag2adC_nZ6tShI`;
-const URL_LOGIN = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBTRy88tody2H_xHOc93ag2adC_nZ6tShI`;
+const API_KEY = process.env.REACT_APP_AUTH_KEY;
+const URL_REGISTRATION = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
+const URL_LOGIN = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
 
 const AuthForm = () => {
   const authContext = useContext(AuthContext);
