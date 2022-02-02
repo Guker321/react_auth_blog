@@ -1,11 +1,22 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import useInput from '../../hooks/use-input';
 
 import classes from './AuthForm.module.css';
 
-const AuthForm = (props) => {
+import LoadingSpinner from '../UI/LoadingSpinner';
+import { AuthContext } from '../../store/auth-context';
+
+const URL_REGISTRATION = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBTRy88tody2H_xHOc93ag2adC_nZ6tShI`;
+const URL_LOGIN = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBTRy88tody2H_xHOc93ag2adC_nZ6tShI`;
+
+const AuthForm = () => {
+  const authContext = useContext(AuthContext);
+  console.log(authContext);
+
   const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     value: enteredEmail,
@@ -27,6 +38,7 @@ const AuthForm = (props) => {
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
+    setError(null);
   };
 
   let formIsValid = false;
@@ -36,14 +48,48 @@ const AuthForm = (props) => {
   } else {
     formIsValid = false;
   }
-  console.log(formIsValid);
 
   const submitHandler = (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
+    // if (isLogin) {
+    // } else {
+    fetch(`${!isLogin ? URL_REGISTRATION : URL_LOGIN}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        setIsLoading(false);
+        if (response.ok) {
+          console.log(response);
+          return response.json();
+        } else {
+          return response.json().then((data) => {
+            console.log(data);
+            throw new Error('Authentication failed');
+          });
+        }
+      })
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.log(error.message);
+        setError(error.message);
+      });
+
+    setIsLoading(false);
     resetEnteredEmail();
     resetEnteredPassword();
   };
+
+  let authError = 'Вы уже зарегистрировались';
 
   const emailInputClasses = emailHasError
     ? `${classes.control} ${classes.invalid}`
@@ -91,6 +137,8 @@ const AuthForm = (props) => {
           <button disabled={!formIsValid}>
             {isLogin ? 'Войти' : 'Создать нового пользователя'}
           </button>
+          {error && <p className={classes.error_text}>{authError}</p>}
+          {isLoading && <LoadingSpinner />}
           <button
             type='button'
             className={classes.toggle}
