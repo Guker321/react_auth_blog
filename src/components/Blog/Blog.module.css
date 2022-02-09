@@ -1,0 +1,21 @@
+.blog {
+  margin: 3rem auto;
+  width: 95%;
+  max-width: 35rem;
+  border-radius: 6px;
+  background-color: var(--white);
+  border: 0.3rem solid var(--main);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  text-align: left;
+}
+.blog__title {
+  color: var(--main);
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.blog__ul {
+  padding: 0;
+  list-style: none;
+}

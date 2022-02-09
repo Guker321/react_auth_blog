@@ -1,11 +1,11 @@
 import { useState, useContext } from 'react';
-
 import useInput from '../../hooks/use-input';
 
 import classes from './AuthForm.module.css';
 
 import LoadingSpinner from '../UI/LoadingSpinner';
 import { AuthContext } from '../../store/auth-context';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const API_KEY = process.env.REACT_APP_AUTH_KEY;
 const URL_REGISTRATION = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
@@ -13,6 +13,7 @@ const URL_LOGIN = `https://identitytoolkit.googleapis.com/v1/accounts:signInWith
 
 const AuthForm = () => {
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState(null);
@@ -67,7 +68,7 @@ const AuthForm = () => {
       .then((response) => {
         setIsLoading(false);
         if (response.ok) {
-          console.log(response);
+          history.push('/')
           return response.json();
         } else {
           return response.json().then((data) => {
@@ -86,7 +87,7 @@ const AuthForm = () => {
     resetEnteredPassword();
   };
 
-  let authError = 'Вы уже зарегистрировались';
+  let authError = 'Пользователь не найден или неправильно введен пароль';
 
   const emailInputClasses = emailHasError
     ? `${classes.control} ${classes.invalid}`
@@ -136,6 +137,7 @@ const AuthForm = () => {
           </button>
           {error && <p className={classes.error_text}>{authError}</p>}
           {isLoading && <LoadingSpinner />}
+
           <button
             type='button'
             className={classes.toggle}

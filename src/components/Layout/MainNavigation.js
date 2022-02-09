@@ -19,10 +19,13 @@ const MainNavigation = () => {
           {isLoggedIn ? (
             <>
               <li>
-                <Link to='/profile'>Profile</Link>
+                <button onClick={authContext.logout}>Logout</button>
               </li>
               <li>
-                <button onClick={authContext.logout}>Logout</button>
+                <Link to='/blog'>Blog</Link>
+              </li>
+              <li>
+                <Link to='/new-post'>Add Post</Link>
               </li>
             </>
           ) : (
